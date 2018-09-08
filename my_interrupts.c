@@ -103,6 +103,7 @@ static ut32 read_wrap(RAnalEsil *esil, SdbMini *seek_tracker) {
 		dict_set (seek_tracker, fd, off_src + blen, NULL);
 	}
 	free (buf);
+	return blen;
 }
 
 static ut32 write_wrap(RAnalEsil *esil, SdbMini *seek_tracker) {
@@ -191,7 +192,7 @@ static bool my_intx80_fcn (RAnalEsil *esil, ut32 interrupt, void *user) {
 	syscall = r_reg_getv (esil->anal->reg, "eax");
 	switch (syscall) {
 	case 3:		//read
-		r_reg_setv (esil->anal->reg, "eax", write_wrap (esil, seek_tracker));
+		r_reg_setv (esil->anal->reg, "eax", read_wrap (esil, seek_tracker));
 		break;
 	case 4:		//write
 		r_reg_setv (esil->anal->reg, "eax", write_wrap (esil, seek_tracker));
